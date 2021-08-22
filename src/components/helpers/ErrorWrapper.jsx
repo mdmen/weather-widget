@@ -1,22 +1,30 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+// @flow
+import * as React from 'react';
 import Alert from 'react-bootstrap/Alert';
 
-export class ErrorWrapper extends React.Component {
-  constructor(props) {
+type Props = {
+  children: React.Node,
+};
+
+type State = {
+  hasError: boolean,
+};
+
+export class ErrorWrapper extends React.Component<Props, State> {
+  constructor(props?: Props) {
     super(props);
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError() {
+  static getDerivedStateFromError(): State {
     return { hasError: true };
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: mixed) {
     console.error(error, errorInfo);
   }
 
-  render() {
+  render(): React.Node {
     return (
       <>
         {this.state.hasError && (
@@ -29,7 +37,3 @@ export class ErrorWrapper extends React.Component {
     );
   }
 }
-
-ErrorWrapper.propTypes = {
-  children: PropTypes.node,
-};

@@ -1,24 +1,15 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 import cn from 'classnames';
+import type { Icons } from '../../common/types';
 
-type IconProps = {
-  name: string,
+type Props = {
+  name: Icons,
   className?: string,
 };
-export const Icon = ({ name, className }: IconProps): React$Node => (
+
+export const Icon = ({ name, className }: Props): React.Node => (
   <svg aria-hidden="true" className={cn(['icon', `icon-${name}`, className])}>
     <use xlinkHref={`#icon-${name}`} />
   </svg>
-);
-
-type WithIconProps = {
-  name: string,
-  children: React$Node,
-};
-export const WithIcon = ({ name, children }: WithIconProps): React$Node => (
-  <>
-    <Icon className="me-1" name={name} />
-    <span className="align-middle">{children}</span>
-  </>
 );

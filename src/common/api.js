@@ -1,15 +1,17 @@
+// @flow
 import ky, { HTTPError } from 'ky';
 import { useContext, useMemo } from 'react';
 import { ParamsContext } from '../components/context/ParamsContext';
 import { openWeatherApiUrl, openWeatherUnits } from './config';
 import { normalizeLocation } from './utils';
+import type { Location, LocationSource } from './types';
 
 const getCurrentWeatherByCity =
   (appId) =>
-  async ({ city }) => {
-    const response = await makeRequest({
+  async ({ city }): Promise<Location> => {
+    const response: LocationSource = await makeRequest({
       queryParams: {
-        name: city,
+        q: city,
         units: openWeatherUnits,
         appId,
       },
@@ -20,8 +22,8 @@ const getCurrentWeatherByCity =
 
 const getCurrentWeatherByCoords =
   (appId) =>
-  async ({ lat, lon }) => {
-    const response = await makeRequest({
+  async ({ lat, lon }): Promise<Location> => {
+    const response: LocationSource = await makeRequest({
       queryParams: {
         units: openWeatherUnits,
         lat,
@@ -46,7 +48,10 @@ const makeRequest = async ({ queryParams, method = 'get' }) => {
   return await response.json();
 };
 
-export const useApi = () => {
+type useApiReturnType = {
+  [string]: (...args: Array<any>) => any,
+};
+export const useApi = (): useApiReturnType => {
   const { appId } = useContext(ParamsContext);
   return {
     getCurrentWeatherByCity: useMemo(

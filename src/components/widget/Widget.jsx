@@ -1,38 +1,42 @@
 // @flow
-
-import React, { useState, useEffect, useCallback } from 'react';
+import * as React from 'react';
 import { useGeolocation, useLocalStorage } from 'react-use';
-import { WidgetSpinner, WidgetContainer } from './layout';
 import { WidgetLocation } from './WidgetLocation';
 import { WidgetMenu } from './WidgetMenu';
+import { WidgetMenuToggler } from './WidgetMenuToggler';
 import { useApi } from '../../common/api';
+import { hasLocation } from '../../common/utils';
 import isEmpty from 'lodash/isEmpty';
+import update from 'immutability-helper';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Alert from 'react-bootstrap/Alert';
 import { localStorageLocationsKey } from '../../common/config';
 
-export const Widget = () => {
+export const Widget = (): React.Node => {
   const geoLocation = useGeolocation();
   const { getCurrentWeatherByCoords, getCurrentWeatherByCity } = useApi();
-  const [isMenuOpen, setMenuOpen] = useState(false);
-  const [locations, setLocation] = useLocalStorage(
+  const [isMenuOpen, setMenuOpen] = React.useState(false);
+  const [locations, setLocations] = useLocalStorage(
     localStorageLocationsKey,
     []
   );
 
-  const shouldRequestLocation =
+  const shouldRequestLocationByGeo =
     isEmpty(locations) &&
     !geoLocation.loading &&
     !geoLocation.error &&
     geoLocation.latitude;
 
-  useEffect(() => {
-    if (shouldRequestLocation) {
+  React.useEffect(() => {
+    if (shouldRequestLocationByGeo) {
       (async () => {
         const location = await getCurrentWeatherByCoords({
           lat: geoLocation.latitude,
           lon: geoLocation.longitude,
         });
-
-        setLocation([...locations, location]);
+        setLocations([...locations, location]);
       })();
     }
   }, [
@@ -41,19 +45,19 @@ export const Widget = () => {
     geoLocation.loading,
     geoLocation.longitude,
     locations,
-    setLocation,
-    shouldRequestLocation,
+    setLocations,
+    shouldRequestLocationByGeo,
     getCurrentWeatherByCoords,
   ]);
 
-  const shouldOpenMenu =
+  const shouldOpenMenuFirst =
     !isMenuOpen &&
     isEmpty(locations) &&
     !geoLocation.loading &&
     geoLocation.error;
 
-  useEffect(() => {
-    if (shouldOpenMenu) {
+  React.useEffect(() => {
+    if (shouldOpenMenuFirst) {
       setMenuOpen(true);
     }
   }, [
@@ -61,42 +65,73 @@ export const Widget = () => {
     geoLocation.loading,
     isMenuOpen,
     locations,
-    shouldOpenMenu,
+    shouldOpenMenuFirst,
   ]);
 
-  const addLocation = useCallback(
+  const addLocation = React.useCallback(
     (city) => {
       (async () => {
         const location = await getCurrentWeatherByCity({ city });
 
-        setLocation([...locations, location]);
+        if (!hasLocation(locations, location.id)) {
+          setLocations([...locations, location]);
+        }
       })();
     },
-    [getCurrentWeatherByCity, locations, setLocation]
+    [getCurrentWeatherByCity, locations, setLocations]
   );
 
-  const removeLocation = useCallback(
+  const removeLocation = React.useCallback(
     (id) => {
-      setLocation(locations.filter((location) => location.id !== id));
+      setLocations(locations.filter((location) => location.id !== id));
     },
-    [locations, setLocation]
+    [locations, setLocations]
   );
+
+  const moveLocation = React.useCallback(
+    (dragIndex, hoverIndex) => {
+      const dragLocation = locations[dragIndex];
+      setLocations(
+        update(locations, {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragLocation],
+          ],
+        })
+      );
+    },
+    [locations, setLocations]
+  );
+
+  const toggleMenu = React.useCallback(() => {
+    setMenuOpen(!isMenuOpen);
+  }, [isMenuOpen]);
 
   return (
-    <WidgetContainer>
-      {geoLocation.loading && isEmpty(locations) && <WidgetSpinner />}
-      {isMenuOpen && (
-        <WidgetMenu
-          locations={locations}
-          addLocation={addLocation}
-          removeLocation={removeLocation}
-        />
-      )}
-      {!isMenuOpen &&
-        !isEmpty(locations) &&
-        locations.map((location) => (
-          <WidgetLocation key={location.id} location={location} />
-        ))}
-    </WidgetContainer>
+    <Container fluid>
+      <Row>
+        <Col>
+          <WidgetMenuToggler isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+          {isMenuOpen && (
+            <WidgetMenu
+              locations={locations}
+              addLocation={addLocation}
+              removeLocation={removeLocation}
+              moveLocation={moveLocation}
+            />
+          )}
+          {!isMenuOpen &&
+            !isEmpty(locations) &&
+            locations.map((location) => (
+              <WidgetLocation key={location.id} location={location} />
+            ))}
+          {isEmpty(locations) && !isMenuOpen && (
+            <Alert variant="warning" className="mt-5">
+              There are no locations. Please select one or more
+            </Alert>
+          )}
+        </Col>
+      </Row>
+    </Container>
   );
 };

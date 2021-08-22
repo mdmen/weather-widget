@@ -1,17 +1,22 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+// @flow
+import * as React from 'react';
 import upperFirst from 'lodash/upperFirst';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
-import { WithIcon } from '../icons/Icon';
+import { WithIcon } from '../icons/WithIcon';
+import type { Location } from '../../common/types';
 
-export const WidgetLocation = ({ location }) => {
+type Props = {
+  location: Location,
+};
+
+export const WidgetLocation = ({ location }: Props): React.Node => {
   const { city, country, temp, image, tempFeelsLike, description } = location;
   return (
-    <Card>
-      <Card.Header as="h5">
+    <Card className="mb-3">
+      <Card.Header as="h5" className="pe-5">
         {city}, <small>{country}</small>
       </Card.Header>
       <Card.Body>
@@ -50,8 +55,4 @@ export const WidgetLocation = ({ location }) => {
       </Card.Body>
     </Card>
   );
-};
-
-WidgetLocation.propTypes = {
-  location: PropTypes.object,
 };

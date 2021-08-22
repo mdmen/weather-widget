@@ -1,1 +1,3 @@
-## empty project
+## TODO
+- tests
+- PurgeCSS

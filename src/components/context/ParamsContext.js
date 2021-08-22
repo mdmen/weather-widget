@@ -1,11 +1,10 @@
 // @flow
-import { createContext } from 'react';
+import * as React from 'react';
 
 type ParamsContextType = {
   appId: string,
 };
 
-export const ParamsContext: React$Context<ParamsContextType> = createContext(
-  {}
-);
+export const ParamsContext: React.Context<ParamsContextType> =
+  React.createContext({});
 ParamsContext.displayName = 'ParamsContext';

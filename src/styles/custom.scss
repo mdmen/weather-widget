@@ -11,3 +11,32 @@
   stroke: currentColor;
   fill: currentColor;
 }
+
+.widget {
+  &-toggler {
+    position: relative;
+    height: 0;
+    z-index: 1;
+
+    &__btn {
+      position: absolute;
+      display: flex;
+      box-shadow: none;
+      top: 0.25rem;
+      right: 0.25rem;
+      font-size: 1.45em;
+    }
+  }
+
+  &-menu {
+    &__btn {
+      display: flex;
+      font-size: $font-size-lg;
+      color: $gray-700;
+
+      &--drag:not([disabled]) {
+        cursor: move;
+      }
+    }
+  }
+}
