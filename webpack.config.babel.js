@@ -66,6 +66,7 @@ export default {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      hash: true,
       templateParameters: {
         openWeatherApiKey: process.env.OPENWEATHER_API_KEY,
       },
