@@ -36,6 +36,7 @@ export const WidgetLocation = ({
 
   React.useEffect(() => {
     (async () => {
+      // TODO fix triple invokes
       if (!isLoading && shouldUpdateLocation(location)) {
         setIsLoading(true);
         await loadLocation(city);
