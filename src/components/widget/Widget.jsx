@@ -4,10 +4,9 @@ import { useGeolocation, useLocalStorage } from 'react-use';
 import { WidgetLocation } from './WidgetLocation';
 import { WidgetMenu } from './WidgetMenu';
 import { WidgetMenuToggler } from './WidgetMenuToggler';
-import { useApi } from '../../common/api';
+import { useApi } from '../../common/hooks';
 import { hasLocation, updateLocation } from '../../common/utils';
 import isEmpty from 'lodash/isEmpty';
-import update from 'immutability-helper';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -69,16 +68,14 @@ export const Widget = (): React.Node => {
   ]);
 
   const loadLocation = React.useCallback(
-    (city) => {
-      (async () => {
-        const location = await getCurrentWeatherByCity({ city });
+    async (city) => {
+      const location = await getCurrentWeatherByCity({ city });
 
-        if (!hasLocation(locations, location.id)) {
-          setLocations([...locations, location]);
-        } else {
-          setLocations(updateLocation(locations, location));
-        }
-      })();
+      if (!hasLocation(locations, location.id)) {
+        setLocations([...locations, location]);
+      } else {
+        setLocations(updateLocation(locations, location));
+      }
     },
     [getCurrentWeatherByCity, locations, setLocations]
   );
@@ -93,14 +90,14 @@ export const Widget = (): React.Node => {
   const moveLocation = React.useCallback(
     (dragIndex, hoverIndex) => {
       const dragLocation = locations[dragIndex];
-      setLocations(
-        update(locations, {
-          $splice: [
-            [dragIndex, 1],
-            [hoverIndex, 0, dragLocation],
-          ],
-        })
-      );
+      const hoverLocation = locations[hoverIndex];
+
+      setLocations((locations) => {
+        const updatedLocations = [...locations];
+        updatedLocations[dragIndex] = hoverLocation;
+        updatedLocations[hoverIndex] = dragLocation;
+        return updatedLocations;
+      });
     },
     [locations, setLocations]
   );

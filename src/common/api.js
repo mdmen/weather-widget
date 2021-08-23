@@ -1,14 +1,15 @@
 // @flow
 import ky, { HTTPError } from 'ky';
-import { useContext, useMemo } from 'react';
-import { ParamsContext } from '../components/context/ParamsContext';
 import { openWeatherApiUrl, openWeatherUnits } from './config';
 import { normalizeLocation } from './utils';
 import type { Location, LocationSource } from './types';
 
-const getCurrentWeatherByCity =
+type CurrentWeatherByCityType = {
+  (appId: string): { ({ city: string }): Promise<Location> },
+};
+export const getCurrentWeatherByCity: CurrentWeatherByCityType =
   (appId) =>
-  async ({ city }): Promise<Location> => {
+  async ({ city }) => {
     const response: LocationSource = await makeRequest({
       queryParams: {
         q: city,
@@ -20,7 +21,10 @@ const getCurrentWeatherByCity =
     return normalizeLocation(response);
   };
 
-const getCurrentWeatherByCoords =
+type CurrentWeatherByCoordsType = {
+  (appId: string): { ({ lat: number, lon: number }): Promise<Location> },
+};
+export const getCurrentWeatherByCoords: CurrentWeatherByCoordsType =
   (appId) =>
   async ({ lat, lon }): Promise<Location> => {
     const response: LocationSource = await makeRequest({
@@ -46,21 +50,4 @@ const makeRequest = async ({ queryParams, method = 'get' }) => {
   }
 
   return await response.json();
-};
-
-type useApiReturnType = {
-  [string]: (...args: Array<any>) => any,
-};
-export const useApi = (): useApiReturnType => {
-  const { appId } = useContext(ParamsContext);
-  return {
-    getCurrentWeatherByCity: useMemo(
-      () => getCurrentWeatherByCity(appId),
-      [appId]
-    ),
-    getCurrentWeatherByCoords: useMemo(
-      () => getCurrentWeatherByCoords(appId),
-      [appId]
-    ),
-  };
 };

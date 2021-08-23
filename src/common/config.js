@@ -4,4 +4,4 @@ export const openWeatherApiUrl =
 export const openWeatherStaticUrl = 'https://openweathermap.org/img/wn/';
 export const openWeatherUnits = 'metric';
 export const localStorageLocationsKey = 'weatherWidgetLocations';
-export const locationUpdateDelay = 60 * 60 * 1000; // 1 hour
+export const locationUpdateDelay = 5 * 1000; // 1 hour

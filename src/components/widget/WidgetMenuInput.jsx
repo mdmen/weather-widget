@@ -3,7 +3,7 @@ import * as React from 'react';
 import Form from 'react-bootstrap/Form';
 
 type Props = {
-  loadLocation: (city: string) => void,
+  loadLocation: (city: string) => Promise<void>,
 };
 
 export const WidgetMenuInput = ({ loadLocation }: Props): React.Node => {

@@ -21,7 +21,8 @@ export const WidgetMenuLocation = ({
   moveLocation,
   removeLocation,
 }: Props): React.Node => {
-  const ref = React.useRef(null);
+  const dragRef = React.useRef(null);
+  const dropRef = React.useRef(null);
 
   const [{ handlerId }, drop] = useDrop({
     accept: 'location',
@@ -31,18 +32,14 @@ export const WidgetMenuLocation = ({
       };
     },
     hover(item, monitor) {
-      if (!ref.current) {
-        return;
-      }
-
       const dragIndex = item.index;
       const hoverIndex = index;
 
-      if (dragIndex === hoverIndex) {
+      if (dragIndex === hoverIndex || !dragRef.current) {
         return;
       }
 
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+      const hoverBoundingRect = dragRef.current?.getBoundingClientRect();
       const hoverMiddleY =
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
@@ -63,25 +60,24 @@ export const WidgetMenuLocation = ({
 
   const [{ isDragging }, drag, preview] = useDrag({
     type: 'location',
-    item: () => {
-      return { id: location.id, index };
-    },
+    item: { index },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
 
-  drag(drop(ref));
+  const targetDragRef = drag(dragRef);
+  const previewDropRef = drop(preview(dropRef));
 
   return (
     <ListGroup.Item
-      ref={preview}
+      ref={previewDropRef}
       style={{ opacity: isDragging ? 0 : 1 }}
       data-handler-id={handlerId}
       className="d-flex align-items-center justify-content-between"
     >
       <Button
-        ref={ref}
+        ref={targetDragRef}
         disabled={locations.length <= 1}
         className="widget-menu__btn widget-menu__btn--drag"
         size="sm"

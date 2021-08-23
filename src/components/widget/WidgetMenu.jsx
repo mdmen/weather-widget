@@ -9,7 +9,7 @@ import type { Location } from '../../common/types';
 type Props = {
   locations: Array<Location>,
   removeLocation: (id: string) => void,
-  loadLocation: (city: string) => void,
+  loadLocation: (city: string) => Promise<void>,
   moveLocation: (dragIndex: number, hoverIndex: number) => void,
 };
 

@@ -29,6 +29,8 @@ export const normalizeLocation = ({
   name,
   sys,
   weather,
+  wind,
+  visibility,
 }: LocationSource): Location => ({
   id,
   city: name,
@@ -38,6 +40,10 @@ export const normalizeLocation = ({
   image: getOpenWeatherIconUrl(weather[0].icon),
   description: weather[0].description,
   lastUpdate: Date.now(),
+  wind: wind.speed,
+  pressure: main.pressure,
+  humidity: main.humidity,
+  visibility: Math.round(visibility / 1000),
 });
 
 export const hasLocation = (locations: Array<Location>, id: string): boolean =>

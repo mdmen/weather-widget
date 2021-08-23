@@ -2,9 +2,12 @@
 export type LocationSource = {
   id: string,
   name: string,
+  visibility: number,
   main: {
     temp: number,
     feels_like: number,
+    pressure: number,
+    humidity: number,
   },
   sys: {
     country: string,
@@ -13,6 +16,9 @@ export type LocationSource = {
     icon: string,
     description: string,
   }>,
+  wind: {
+    speed: number,
+  },
 };
 
 export type Location = {
@@ -24,6 +30,10 @@ export type Location = {
   image: string,
   description: string,
   lastUpdate: number,
+  wind: number,
+  pressure: number,
+  humidity: number,
+  visibility: number,
 };
 
 export type Icons =
