@@ -23,6 +23,7 @@ export type Location = {
   tempFeelsLike: string,
   image: string,
   description: string,
+  lastUpdate: number,
 };
 
 export type Icons =

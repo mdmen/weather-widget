@@ -9,13 +9,13 @@ import type { Location } from '../../common/types';
 type Props = {
   locations: Array<Location>,
   removeLocation: (id: string) => void,
-  addLocation: (city: string) => void,
+  loadLocation: (city: string) => void,
   moveLocation: (dragIndex: number, hoverIndex: number) => void,
 };
 
 export const WidgetMenu = ({
   locations,
-  addLocation,
+  loadLocation,
   removeLocation,
   moveLocation,
 }: Props): React.Node => {
@@ -35,7 +35,7 @@ export const WidgetMenu = ({
             />
           ))}
         </ListGroup>
-        <WidgetMenuInput addLocation={addLocation} />
+        <WidgetMenuInput loadLocation={loadLocation} />
       </Card.Body>
     </Card>
   );

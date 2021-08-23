@@ -34,6 +34,21 @@ export default {
         test: /\.(scss|sass)$/,
         use: ['css-loader', 'sass-loader'],
       },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: '@svgr/webpack',
+            options: {
+              svgoConfig: {
+                plugins: {
+                  removeViewBox: false,
+                },
+              },
+            },
+          },
+        ],
+      },
     ],
   },
   resolve: {

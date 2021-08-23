@@ -5,7 +5,7 @@ import { WidgetLocation } from './WidgetLocation';
 import { WidgetMenu } from './WidgetMenu';
 import { WidgetMenuToggler } from './WidgetMenuToggler';
 import { useApi } from '../../common/api';
-import { hasLocation } from '../../common/utils';
+import { hasLocation, updateLocation } from '../../common/utils';
 import isEmpty from 'lodash/isEmpty';
 import update from 'immutability-helper';
 import Container from 'react-bootstrap/Container';
@@ -68,13 +68,15 @@ export const Widget = (): React.Node => {
     shouldOpenMenuFirst,
   ]);
 
-  const addLocation = React.useCallback(
+  const loadLocation = React.useCallback(
     (city) => {
       (async () => {
         const location = await getCurrentWeatherByCity({ city });
 
         if (!hasLocation(locations, location.id)) {
           setLocations([...locations, location]);
+        } else {
+          setLocations(updateLocation(locations, location));
         }
       })();
     },
@@ -115,7 +117,7 @@ export const Widget = (): React.Node => {
           {isMenuOpen && (
             <WidgetMenu
               locations={locations}
-              addLocation={addLocation}
+              loadLocation={loadLocation}
               removeLocation={removeLocation}
               moveLocation={moveLocation}
             />
@@ -123,7 +125,11 @@ export const Widget = (): React.Node => {
           {!isMenuOpen &&
             !isEmpty(locations) &&
             locations.map((location) => (
-              <WidgetLocation key={location.id} location={location} />
+              <WidgetLocation
+                key={location.id}
+                location={location}
+                loadLocation={loadLocation}
+              />
             ))}
           {isEmpty(locations) && !isMenuOpen && (
             <Alert variant="warning" className="mt-5">

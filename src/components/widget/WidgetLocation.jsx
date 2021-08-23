@@ -5,15 +5,27 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
+import { shouldUpdateLocation } from '../../common/utils';
 import { WithIcon } from '../icons/WithIcon';
 import type { Location } from '../../common/types';
 
 type Props = {
   location: Location,
+  loadLocation: (city: string) => void,
 };
 
-export const WidgetLocation = ({ location }: Props): React.Node => {
+export const WidgetLocation = ({
+  location,
+  loadLocation,
+}: Props): React.Node => {
   const { city, country, temp, image, tempFeelsLike, description } = location;
+
+  React.useEffect(() => {
+    if (shouldUpdateLocation(location)) {
+      loadLocation(city);
+    }
+  }, [city, loadLocation, location]);
+
   return (
     <Card className="mb-3">
       <Card.Header as="h5" className="pe-5">

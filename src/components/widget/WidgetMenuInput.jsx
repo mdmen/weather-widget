@@ -3,20 +3,20 @@ import * as React from 'react';
 import Form from 'react-bootstrap/Form';
 
 type Props = {
-  addLocation: (city: string) => void,
+  loadLocation: (city: string) => void,
 };
 
-export const WidgetMenuInput = ({ addLocation }: Props): React.Node => {
+export const WidgetMenuInput = ({ loadLocation }: Props): React.Node => {
   const [value, setValue] = React.useState('');
 
   const submitHandler = React.useCallback(
     (event) => {
       event.preventDefault();
 
-      addLocation(value);
+      loadLocation(value);
       setValue('');
     },
-    [addLocation, value]
+    [loadLocation, value]
   );
 
   const onChange = (event) => {

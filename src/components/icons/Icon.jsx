@@ -9,7 +9,11 @@ type Props = {
 };
 
 export const Icon = ({ name, className }: Props): React.Node => (
-  <svg aria-hidden="true" className={cn(['icon', `icon-${name}`, className])}>
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 32 32"
+    className={cn(['icon', `icon-${name}`, className])}
+  >
     <use xlinkHref={`#icon-${name}`} />
   </svg>
 );

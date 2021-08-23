@@ -1,24 +1,25 @@
 // @flow
 import * as React from 'react';
-import { iconsContent } from './content';
+import EyeIcon from '../../assets/icons/eye.svg';
+import GearIcon from '../../assets/icons/gear-fill.svg';
+import MoistureIcon from '../../assets/icons/moisture.svg';
+import SpeedometerIcon from '../../assets/icons/speedometer2.svg';
+import DotsIcon from '../../assets/icons/three-dots-vertical.svg';
+import CloseIcon from '../../assets/icons/x-lg.svg';
+import WindIcon from '../../assets/icons/wind.svg';
+import WaterIcon from '../../assets/icons/water.svg';
+import TrashIcon from '../../assets/icons/trash-fill.svg';
 
 export const IconsProvider = (): React.Node => (
-  <svg
-    aria-hidden="true"
-    className="visually-hidden"
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    xmlnsXlink="http://www.w3.org/1999/xlink"
-  >
-    <defs>
-      {Object.keys(iconsContent).map((icon) => {
-        const Paths = iconsContent[icon];
-        return (
-          <symbol key={icon} id={`icon-${icon}`} viewBox="0 0 32 32">
-            <Paths />
-          </symbol>
-        );
-      })}
-    </defs>
-  </svg>
+  <div aria-hidden="true" className="visually-hidden">
+    <EyeIcon id="icon-eye" />
+    <GearIcon id="icon-gear" />
+    <MoistureIcon id="icon-moisture" />
+    <SpeedometerIcon id="icon-speedometer2" />
+    <DotsIcon id="icon-dots" />
+    <CloseIcon id="icon-close" />
+    <WindIcon id="icon-wind" />
+    <WaterIcon id="icon-water" />
+    <TrashIcon id="icon-trash" />
+  </div>
 );
