@@ -11,14 +11,14 @@ type Props = {
   location: Location,
   locations: Array<Location>,
   removeLocation: (id: string) => void,
-  moveLocation: (dragIndex: number, hoverIndex: number) => void,
+  swapLocations: (dragIndex: number, hoverIndex: number) => void,
 };
 
 export const WidgetMenuLocation = ({
   index,
   location,
   locations,
-  moveLocation,
+  swapLocations,
   removeLocation,
 }: Props): React.Node => {
   const dragRef = React.useRef(null);
@@ -35,7 +35,7 @@ export const WidgetMenuLocation = ({
       const dragIndex = item.index;
       const hoverIndex = index;
 
-      if (dragIndex === hoverIndex || !dragRef.current) {
+      if (!dragRef.current || !dropRef.current || dragIndex === hoverIndex) {
         return;
       }
 
@@ -45,22 +45,21 @@ export const WidgetMenuLocation = ({
       const clientOffset = monitor.getClientOffset();
       const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+      if (
+        (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) ||
+        (dragIndex > hoverIndex && hoverClientY > hoverMiddleY)
+      ) {
         return;
       }
 
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
-
-      moveLocation(dragIndex, hoverIndex);
+      swapLocations(dragIndex, hoverIndex);
       item.index = hoverIndex;
     },
   });
 
   const [{ isDragging }, drag, preview] = useDrag({
     type: 'location',
-    item: { index },
+    item: () => ({ index }),
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -73,15 +72,15 @@ export const WidgetMenuLocation = ({
     <ListGroup.Item
       ref={previewDropRef}
       style={{ opacity: isDragging ? 0 : 1 }}
-      data-handler-id={handlerId}
       className="d-flex align-items-center justify-content-between"
+      data-handler-id={handlerId}
     >
       <Button
         ref={targetDragRef}
         disabled={locations.length <= 1}
         className="widget-menu__btn widget-menu__btn--drag"
-        size="sm"
         variant="light"
+        size="sm"
       >
         <Icon name="dots" />
       </Button>
@@ -89,8 +88,8 @@ export const WidgetMenuLocation = ({
       <Button
         onClick={() => removeLocation(location.id)}
         className="cursor-drag widget-menu__btn"
-        size="sm"
         variant="light"
+        size="sm"
       >
         <Icon name="trash" />
       </Button>

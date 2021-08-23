@@ -16,55 +16,37 @@ import { localStorageLocationsKey } from '../../common/config';
 export const Widget = (): React.Node => {
   const geoLocation = useGeolocation();
   const { getCurrentWeatherByCoords, getCurrentWeatherByCity } = useApi();
+  const isRequestByCoordsComplete = React.useRef(false);
   const [isMenuOpen, setMenuOpen] = React.useState(false);
   const [locations, setLocations] = useLocalStorage(
     localStorageLocationsKey,
     []
   );
 
-  const shouldRequestLocationByGeo =
-    isEmpty(locations) &&
-    !geoLocation.loading &&
-    !geoLocation.error &&
-    geoLocation.latitude;
-
   React.useEffect(() => {
-    if (shouldRequestLocationByGeo) {
+    if (
+      !isRequestByCoordsComplete.current &&
+      isEmpty(locations) &&
+      !geoLocation.error &&
+      geoLocation.latitude
+    ) {
       (async () => {
         const location = await getCurrentWeatherByCoords({
           lat: geoLocation.latitude,
           lon: geoLocation.longitude,
         });
+
+        isRequestByCoordsComplete.current = true;
         setLocations([...locations, location]);
       })();
     }
   }, [
     geoLocation.error,
     geoLocation.latitude,
-    geoLocation.loading,
     geoLocation.longitude,
+    getCurrentWeatherByCoords,
     locations,
     setLocations,
-    shouldRequestLocationByGeo,
-    getCurrentWeatherByCoords,
-  ]);
-
-  const shouldOpenMenuFirst =
-    !isMenuOpen &&
-    isEmpty(locations) &&
-    !geoLocation.loading &&
-    geoLocation.error;
-
-  React.useEffect(() => {
-    if (shouldOpenMenuFirst) {
-      setMenuOpen(true);
-    }
-  }, [
-    geoLocation.error,
-    geoLocation.loading,
-    isMenuOpen,
-    locations,
-    shouldOpenMenuFirst,
   ]);
 
   const loadLocation = React.useCallback(
@@ -87,17 +69,16 @@ export const Widget = (): React.Node => {
     [locations, setLocations]
   );
 
-  const moveLocation = React.useCallback(
+  const swapLocations = React.useCallback(
     (dragIndex, hoverIndex) => {
       const dragLocation = locations[dragIndex];
       const hoverLocation = locations[hoverIndex];
+      const updatedLocations = [...locations];
 
-      setLocations((locations) => {
-        const updatedLocations = [...locations];
-        updatedLocations[dragIndex] = hoverLocation;
-        updatedLocations[hoverIndex] = dragLocation;
-        return updatedLocations;
-      });
+      updatedLocations[dragIndex] = hoverLocation;
+      updatedLocations[hoverIndex] = dragLocation;
+
+      setLocations(updatedLocations);
     },
     [locations, setLocations]
   );
@@ -111,12 +92,17 @@ export const Widget = (): React.Node => {
       <Row>
         <Col>
           <WidgetMenuToggler isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+          {isEmpty(locations) && (
+            <Alert variant="warning" className="mt-5">
+              There are no locations. Please select at least one
+            </Alert>
+          )}
           {isMenuOpen && (
             <WidgetMenu
               locations={locations}
               loadLocation={loadLocation}
               removeLocation={removeLocation}
-              moveLocation={moveLocation}
+              swapLocations={swapLocations}
             />
           )}
           {!isMenuOpen &&
@@ -128,11 +114,6 @@ export const Widget = (): React.Node => {
                 loadLocation={loadLocation}
               />
             ))}
-          {isEmpty(locations) && !isMenuOpen && (
-            <Alert variant="warning" className="mt-5">
-              There are no locations. Please select one or more
-            </Alert>
-          )}
         </Col>
       </Row>
     </Container>

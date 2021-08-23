@@ -3,7 +3,7 @@
   "scripts": {
     "start": "webpack serve --hot --mode development",
     "build": "webpack --mode production",
-    "deploy": "yarn run build && git subtree push --prefix dist origin gh-pages"
+    "deploy": "git subtree push --prefix dist origin gh-pages"
   },
   "engines": {
     "node": ">=14.x",
