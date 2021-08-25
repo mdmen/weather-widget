@@ -5,8 +5,7 @@ import { WidgetLocation } from './WidgetLocation';
 import { WidgetMenu } from './WidgetMenu';
 import { WidgetMenuToggler } from './WidgetMenuToggler';
 import { useApi } from '../../common/hooks';
-import { hasLocation, updateLocation } from '../../common/utils';
-import isEmpty from 'lodash/isEmpty';
+import { hasLocation } from '../../common/utils';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -16,47 +15,50 @@ import { localStorageLocationsKey } from '../../common/config';
 export const Widget = (): React.Node => {
   const geoLocation = useGeolocation();
   const { getCurrentWeatherByCoords, getCurrentWeatherByCity } = useApi();
-  const isRequestByCoordsComplete = React.useRef(false);
+  const isRequestByGeoComplete = React.useRef(false);
   const [isMenuOpen, setMenuOpen] = React.useState(false);
   const [locations, setLocations] = useLocalStorage(
     localStorageLocationsKey,
     []
   );
 
+  const shouldRequestWeatherByGeo =
+    !isRequestByGeoComplete.current &&
+    !locations.length &&
+    !geoLocation.error &&
+    geoLocation.latitude;
+
   React.useEffect(() => {
-    if (
-      !isRequestByCoordsComplete.current &&
-      isEmpty(locations) &&
-      !geoLocation.error &&
-      geoLocation.latitude
-    ) {
+    if (shouldRequestWeatherByGeo) {
       (async () => {
         const location = await getCurrentWeatherByCoords({
           lat: geoLocation.latitude,
           lon: geoLocation.longitude,
         });
 
-        isRequestByCoordsComplete.current = true;
+        isRequestByGeoComplete.current = true;
         setLocations([...locations, location]);
       })();
     }
   }, [
-    geoLocation.error,
     geoLocation.latitude,
     geoLocation.longitude,
     getCurrentWeatherByCoords,
     locations,
     setLocations,
+    shouldRequestWeatherByGeo,
   ]);
 
   const loadLocation = React.useCallback(
     async (city) => {
       const location = await getCurrentWeatherByCity({ city });
 
-      if (!hasLocation(locations, location.id)) {
-        setLocations([...locations, location]);
+      if (hasLocation(locations, location.id)) {
+        setLocations(
+          locations.map((item) => (item.id === location.id ? location : item))
+        );
       } else {
-        setLocations(updateLocation(locations, location));
+        setLocations([...locations, location]);
       }
     },
     [getCurrentWeatherByCity, locations, setLocations]
@@ -92,7 +94,7 @@ export const Widget = (): React.Node => {
       <Row>
         <Col>
           <WidgetMenuToggler isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
-          {isEmpty(locations) && (
+          {!locations.length && (
             <Alert variant="warning" className="mt-5">
               There are no locations. Please select at least one
             </Alert>
@@ -106,7 +108,7 @@ export const Widget = (): React.Node => {
             />
           )}
           {!isMenuOpen &&
-            !isEmpty(locations) &&
+            !!locations.length &&
             locations.map((location) => (
               <WidgetLocation
                 key={location.id}

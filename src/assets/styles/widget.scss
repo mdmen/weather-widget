@@ -1,17 +1,3 @@
-.wrapper {
-  width: 100%;
-  max-width: 350px;
-}
-
-.icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  stroke-width: 0;
-  stroke: currentColor;
-  fill: currentColor;
-}
-
 .widget {
   &-toggler {
     position: relative;
@@ -22,8 +8,8 @@
       position: absolute;
       display: flex;
       box-shadow: none;
-      top: 0.25rem;
-      right: 0.25rem;
+      top: 0.2em;
+      right: 0.2em;
       font-size: 1.45em;
     }
   }

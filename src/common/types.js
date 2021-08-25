@@ -1,5 +1,5 @@
 // @flow
-export type LocationSource = {
+export type LocationSource = $ReadOnly<{
   id: string,
   name: string,
   visibility: number,
@@ -19,9 +19,9 @@ export type LocationSource = {
   wind: {
     speed: number,
   },
-};
+}>;
 
-export type Location = {
+export type Location = $ReadOnly<{
   id: string,
   city: string,
   country: string,
@@ -34,7 +34,7 @@ export type Location = {
   pressure: number,
   humidity: number,
   visibility: number,
-};
+}>;
 
 export type Icons =
   | 'wind'

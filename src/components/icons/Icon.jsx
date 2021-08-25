@@ -1,6 +1,5 @@
 // @flow
 import * as React from 'react';
-import cn from 'classnames';
 import type { Icons } from '../../common/types';
 
 type Props = {
@@ -8,12 +7,18 @@ type Props = {
   className?: string,
 };
 
-export const Icon = ({ name, className }: Props): React.Node => (
-  <svg
-    aria-hidden="true"
-    viewBox="0 0 32 32"
-    className={cn(['icon', `icon-${name}`, className])}
-  >
-    <use xlinkHref={`#icon-${name}`} />
-  </svg>
-);
+export const Icon = ({ name, className = '' }: Props): React.Node => {
+  const id = `icon-${name}`;
+  const classes = `icon ${id} ${className}`.trim();
+
+  return (
+    <svg
+      focusable="false"
+      aria-hidden="true"
+      viewBox="0 0 32 32"
+      className={classes}
+    >
+      <use xlinkHref={`#${id}`} />
+    </svg>
+  );
+};

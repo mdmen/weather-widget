@@ -39,9 +39,8 @@ export const getCurrentWeatherByCoords: CurrentWeatherByCoordsType =
     return normalizeLocation(response);
   };
 
-const makeRequest = async ({ queryParams, method = 'get' }) => {
+const makeRequest = async ({ queryParams }) => {
   const response = await ky(openWeatherApiUrl, {
-    method,
     searchParams: queryParams,
   });
 

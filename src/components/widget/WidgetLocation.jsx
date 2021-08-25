@@ -1,13 +1,11 @@
 // @flow
 import * as React from 'react';
-import upperFirst from 'lodash/upperFirst';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
-import { useSafeInvoke } from '../../common/hooks';
-import { shouldUpdateLocation } from '../../common/utils';
-import { WithIcon } from '../icons/WithIcon';
+import { shouldUpdateLocation, upperFirst } from '../../common/utils';
+import { Icon } from '../icons/Icon';
 import type { Location } from '../../common/types';
 
 type Props = {
@@ -19,8 +17,6 @@ export const WidgetLocation = ({
   location,
   loadLocation,
 }: Props): React.Node => {
-  const [isLoading, setIsLoading] = React.useState(false);
-  const safeInvoke = useSafeInvoke();
   const {
     city,
     wind,
@@ -35,15 +31,10 @@ export const WidgetLocation = ({
   } = location;
 
   React.useEffect(() => {
-    (async () => {
-      // TODO fix triple invokes
-      if (!isLoading && shouldUpdateLocation(location)) {
-        setIsLoading(true);
-        await loadLocation(city);
-        safeInvoke(setIsLoading, false);
-      }
-    })();
-  }, [city, isLoading, loadLocation, location, safeInvoke]);
+    if (shouldUpdateLocation(location)) {
+      loadLocation(city);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Card className="mb-3">
@@ -66,18 +57,22 @@ export const WidgetLocation = ({
         </Row>
         <Row className="mb-1">
           <Col>
-            <WithIcon name="wind">wind: {wind}m/s</WithIcon>
+            <Icon name="wind" className="me-1" />
+            <span className="align-middle">wind: {wind}m/s</span>
           </Col>
           <Col>
-            <WithIcon name="speedometer2">Pressure: {pressure}</WithIcon>
+            <Icon name="speedometer2" className="me-1" />
+            <span className="align-middle">Pressure: {pressure}</span>
           </Col>
         </Row>
         <Row className="mb-1">
           <Col>
-            <WithIcon name="moisture">Humidity: {humidity}%</WithIcon>
+            <Icon name="moisture" className="me-1" />
+            <span className="align-middle">Humidity: {humidity}%</span>
           </Col>
           <Col>
-            <WithIcon name="eye">Visibility: {visibility}km</WithIcon>
+            <Icon name="eye" className="me-1" />
+            <span className="align-middle">Visibility: {visibility}km</span>
           </Col>
         </Row>
       </Card.Body>

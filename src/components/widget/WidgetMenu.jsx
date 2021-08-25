@@ -28,7 +28,6 @@ export const WidgetMenu = ({
             <WidgetMenuLocation
               key={location.id}
               index={index}
-              locations={locations}
               location={location}
               removeLocation={removeLocation}
               swapLocations={swapLocations}

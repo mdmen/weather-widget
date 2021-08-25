@@ -9,7 +9,6 @@ import type { Location } from '../../common/types';
 type Props = {
   index: number,
   location: Location,
-  locations: Array<Location>,
   removeLocation: (id: string) => void,
   swapLocations: (dragIndex: number, hoverIndex: number) => void,
 };
@@ -17,7 +16,6 @@ type Props = {
 export const WidgetMenuLocation = ({
   index,
   location,
-  locations,
   swapLocations,
   removeLocation,
 }: Props): React.Node => {
@@ -75,19 +73,16 @@ export const WidgetMenuLocation = ({
       className="d-flex align-items-center justify-content-between"
       data-handler-id={handlerId}
     >
-      <Button
+      <div
         ref={targetDragRef}
-        disabled={locations.length <= 1}
-        className="widget-menu__btn widget-menu__btn--drag"
-        variant="light"
-        size="sm"
+        className="btn btn-light btn-sm widget-menu__btn widget-menu__btn--drag"
       >
         <Icon name="dots" />
-      </Button>
+      </div>
       {location.city}, {location.country}
       <Button
         onClick={() => removeLocation(location.id)}
-        className="cursor-drag widget-menu__btn"
+        className="widget-menu__btn"
         variant="light"
         size="sm"
       >
