@@ -73,16 +73,23 @@ export const WidgetMenuLocation = ({
       className="d-flex align-items-center justify-content-between"
       data-handler-id={handlerId}
     >
-      <div
+      <Button
         ref={targetDragRef}
-        className="btn btn-light btn-sm widget-menu__btn widget-menu__btn--drag"
+        className="widget-menu__btn widget-menu__btn--drag"
+        variant="light"
+        tabIndex="-1"
+        size="sm"
+        as="div"
       >
         <Icon name="dots" />
-      </div>
-      {location.city}, {location.country}
+      </Button>
+      <span>
+        {location.city}, {location.country}
+      </span>
       <Button
         onClick={() => removeLocation(location.id)}
         className="widget-menu__btn"
+        aria-label="Delete location"
         variant="light"
         size="sm"
       >

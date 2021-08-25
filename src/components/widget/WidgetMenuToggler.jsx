@@ -17,13 +17,11 @@ export const WidgetMenuToggler = ({
       <Button
         onClick={toggleMenu}
         className="widget-toggler__btn"
-        size="sm"
+        aria-label={isMenuOpen ? 'Close settings' : 'Open settings'}
         variant="light"
+        size="sm"
       >
         {isMenuOpen ? <Icon name="close" /> : <Icon name="gear" />}
-        <span className="visually-hidden">
-          {isMenuOpen ? 'Close settings' : 'Open settings'}
-        </span>
       </Button>
     </div>
   );

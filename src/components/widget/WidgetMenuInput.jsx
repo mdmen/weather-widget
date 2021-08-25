@@ -3,10 +3,14 @@ import * as React from 'react';
 import Form from 'react-bootstrap/Form';
 
 type Props = {
+  isDisabled: boolean,
   loadLocation: (city: string) => Promise<void>,
 };
 
-export const WidgetMenuInput = ({ loadLocation }: Props): React.Node => {
+export const WidgetMenuInput = ({
+  isDisabled,
+  loadLocation,
+}: Props): React.Node => {
   const [value, setValue] = React.useState('');
 
   const submitHandler = React.useCallback(
@@ -27,7 +31,12 @@ export const WidgetMenuInput = ({ loadLocation }: Props): React.Node => {
     <Form onSubmit={submitHandler}>
       <Form.Group>
         <Form.Label>Add location</Form.Label>
-        <Form.Control type="text" value={value} onChange={onChange} />
+        <Form.Control
+          disabled={isDisabled}
+          type="text"
+          value={value}
+          onChange={onChange}
+        />
       </Form.Group>
     </Form>
   );

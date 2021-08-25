@@ -44,5 +44,16 @@ export const hasLocation = (locations: Array<Location>, id: string): boolean =>
 export const shouldUpdateLocation = (location: Location): boolean =>
   location.lastUpdate + locationUpdateDelay < Date.now();
 
+export const collectLocationsToUpdate = (
+  locations: Array<Location>
+): Array<{ id: string, city: string }> =>
+  locations.reduce(
+    (acc, location) =>
+      shouldUpdateLocation(location)
+        ? [...acc, { id: location.id, city: location.city }]
+        : acc,
+    []
+  );
+
 export const upperFirst = (str: string): string =>
   str[0].toUpperCase() + str.slice(1);

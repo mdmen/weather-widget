@@ -1,65 +1,31 @@
 // @flow
 import * as React from 'react';
-import { useGeolocation, useLocalStorage } from 'react-use';
+import { useLocalStorage } from 'react-use';
 import { WidgetLocation } from './WidgetLocation';
 import { WidgetMenu } from './WidgetMenu';
 import { WidgetMenuToggler } from './WidgetMenuToggler';
 import { useApi } from '../../common/hooks';
 import { hasLocation } from '../../common/utils';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { WidgetContainer } from './WidgetContainer';
 import Alert from 'react-bootstrap/Alert';
 import { localStorageLocationsKey } from '../../common/config';
 
 export const Widget = (): React.Node => {
-  const geoLocation = useGeolocation();
   const { getCurrentWeatherByCoords, getCurrentWeatherByCity } = useApi();
-  const isRequestByGeoComplete = React.useRef(false);
   const [isMenuOpen, setMenuOpen] = React.useState(false);
   const [locations, setLocations] = useLocalStorage(
     localStorageLocationsKey,
     []
   );
 
-  const shouldRequestWeatherByGeo =
-    !isRequestByGeoComplete.current &&
-    !locations.length &&
-    !geoLocation.error &&
-    geoLocation.latitude;
-
-  React.useEffect(() => {
-    if (shouldRequestWeatherByGeo) {
-      (async () => {
-        const location = await getCurrentWeatherByCoords({
-          lat: geoLocation.latitude,
-          lon: geoLocation.longitude,
-        });
-
-        isRequestByGeoComplete.current = true;
-        setLocations([...locations, location]);
-      })();
-    }
-  }, [
-    geoLocation.latitude,
-    geoLocation.longitude,
-    getCurrentWeatherByCoords,
-    locations,
-    setLocations,
-    shouldRequestWeatherByGeo,
-  ]);
-
   const loadLocation = React.useCallback(
     async (city) => {
       const location = await getCurrentWeatherByCity({ city });
+      const newLocations = hasLocation(locations, location.id)
+        ? locations.map((item) => (item.id === location.id ? location : item))
+        : [...locations, location];
 
-      if (hasLocation(locations, location.id)) {
-        setLocations(
-          locations.map((item) => (item.id === location.id ? location : item))
-        );
-      } else {
-        setLocations([...locations, location]);
-      }
+      setLocations(newLocations);
     },
     [getCurrentWeatherByCity, locations, setLocations]
   );
@@ -90,34 +56,35 @@ export const Widget = (): React.Node => {
   }, [isMenuOpen]);
 
   return (
-    <Container fluid>
-      <Row>
-        <Col>
-          <WidgetMenuToggler isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
-          {!locations.length && (
-            <Alert variant="warning" className="mt-5">
-              There are no locations. Please select at least one
-            </Alert>
-          )}
-          {isMenuOpen && (
-            <WidgetMenu
-              locations={locations}
-              loadLocation={loadLocation}
-              removeLocation={removeLocation}
-              swapLocations={swapLocations}
-            />
-          )}
-          {!isMenuOpen &&
-            !!locations.length &&
-            locations.map((location) => (
-              <WidgetLocation
-                key={location.id}
-                location={location}
-                loadLocation={loadLocation}
-              />
-            ))}
-        </Col>
-      </Row>
-    </Container>
+    <WidgetContainer
+      locations={locations}
+      setLocations={setLocations}
+      getCurrentWeatherByCoords={getCurrentWeatherByCoords}
+      getCurrentWeatherByCity={getCurrentWeatherByCity}
+    >
+      <WidgetMenuToggler isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+      {!locations.length && (
+        <Alert variant="warning" className="mt-5">
+          There are no locations. Please select at least one
+        </Alert>
+      )}
+      {isMenuOpen && (
+        <WidgetMenu
+          locations={locations}
+          loadLocation={loadLocation}
+          removeLocation={removeLocation}
+          swapLocations={swapLocations}
+        />
+      )}
+      {!isMenuOpen &&
+        !!locations.length &&
+        locations.map((location) => (
+          <WidgetLocation
+            key={location.id}
+            location={location}
+            loadLocation={loadLocation}
+          />
+        ))}
+    </WidgetContainer>
   );
 };
