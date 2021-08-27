@@ -3,6 +3,7 @@
   "scripts": {
     "start": "webpack serve --hot --mode development",
     "build": "NODE_ENV=production webpack --mode production",
+    "prepare": "husky install",
     "lint": "flow && eslint . --ext .js,.jsx",
     "test": "jest"
   },
@@ -20,12 +21,6 @@
     "not dead",
     "not ie 11"
   ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "yarn run lint && yarn run test"
-    }
-  },
   "dependencies": {
     "bootstrap": "5.1.0",
     "ky": "^0.28.5",
