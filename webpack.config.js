@@ -1,12 +1,12 @@
-import path from 'path';
-import TerserPlugin from 'terser-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 require('dotenv').config();
 
 const distFolder = path.resolve(__dirname, 'dist');
 
-export default {
+module.exports = {
   entry: ['react-hot-loader/patch', './src/index.js'],
   output: {
     path: distFolder,

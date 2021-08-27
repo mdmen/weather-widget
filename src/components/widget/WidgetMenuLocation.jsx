@@ -9,7 +9,7 @@ import type { Location } from '../../common/types';
 type Props = {
   index: number,
   location: Location,
-  removeLocation: (id: string) => void,
+  removeLocation: (id: number) => void,
   swapLocations: (dragIndex: number, hoverIndex: number) => void,
 };
 

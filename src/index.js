@@ -2,7 +2,7 @@
 import { createElement } from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { App } from './App';
-import styles from './assets/styles/index.scss';
+import styles from './index.scss';
 
 class WeatherWidget extends HTMLElement {
   connectedCallback() {

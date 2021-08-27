@@ -1,34 +1,32 @@
 // @flow
-import {
-  openWeatherStaticUrl,
-  openWeatherUnits,
-  locationUpdateDelay,
-} from './config';
-import type { LocationSource, Location } from './types';
+import { openWeatherStaticUrl, locationUpdateDelay } from './config';
+import type { LocationSource, Location, MeasureUnits } from './types';
 
 const getOpenWeatherIconUrl = (code: string): string =>
-  code ? `${openWeatherStaticUrl}${code}@2x.png` : '';
+  `${openWeatherStaticUrl}${code}@2x.png`;
 
-const formatTemperature = (temp: number): string => {
-  const fixedTemp = Math.round(temp);
+export const formatTemperature = (
+  temp: number,
+  measureUnits: MeasureUnits
+): string => {
   const units = {
+    standard: ' K',
     metric: '°C',
-    imperial: 'F',
+    imperial: '°F',
   };
 
-  if (!units[openWeatherUnits]) {
-    return fixedTemp.toString();
-  }
-
-  return `${fixedTemp} ${units[openWeatherUnits]}`;
+  return `${Math.round(temp)}${units[measureUnits]}`;
 };
 
-export const normalizeLocation = (location: LocationSource): Location => ({
+export const normalizeLocation = (
+  location: LocationSource,
+  measureUnits: MeasureUnits
+): Location => ({
   id: location.id,
   city: location.name,
   country: location.sys.country,
-  temp: formatTemperature(location.main.temp),
-  tempFeelsLike: formatTemperature(location.main.feels_like),
+  temp: formatTemperature(location.main.temp, measureUnits),
+  tempFeelsLike: formatTemperature(location.main.feels_like, measureUnits),
   image: getOpenWeatherIconUrl(location.weather[0].icon),
   description: location.weather[0].description,
   lastUpdate: Date.now(),
@@ -38,15 +36,15 @@ export const normalizeLocation = (location: LocationSource): Location => ({
   visibility: Math.round(location.visibility / 1000),
 });
 
-export const hasLocation = (locations: Array<Location>, id: string): boolean =>
+export const hasLocation = (locations: Array<Location>, id: number): boolean =>
   !!locations.find((location) => location.id === id);
 
-export const shouldUpdateLocation = (location: Location): boolean =>
+const shouldUpdateLocation = (location: Location): boolean =>
   location.lastUpdate + locationUpdateDelay < Date.now();
 
 export const collectLocationsToUpdate = (
   locations: Array<Location>
-): Array<{ id: string, city: string }> =>
+): Array<{ id: number, city: string }> =>
   locations.reduce(
     (acc, location) =>
       shouldUpdateLocation(location)

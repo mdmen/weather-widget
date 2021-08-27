@@ -1,6 +1,6 @@
 // @flow
 export type LocationSource = $ReadOnly<{
-  id: string,
+  id: number,
   name: string,
   visibility: number,
   main: {
@@ -22,7 +22,7 @@ export type LocationSource = $ReadOnly<{
 }>;
 
 export type Location = $ReadOnly<{
-  id: string,
+  id: number,
   city: string,
   country: string,
   temp: string,
@@ -46,3 +46,5 @@ export type Icons =
   | 'close'
   | 'trash'
   | 'dots';
+
+export type MeasureUnits = 'standard' | 'metric' | 'imperial';

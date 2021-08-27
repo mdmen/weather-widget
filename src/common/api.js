@@ -1,42 +1,46 @@
 // @flow
 import ky, { HTTPError } from 'ky';
-import { openWeatherApiUrl, openWeatherUnits } from './config';
+import { openWeatherApiUrl } from './config';
 import { normalizeLocation } from './utils';
-import type { Location, LocationSource } from './types';
+import type { Location, LocationSource, MeasureUnits } from './types';
 
 type CurrentWeatherByCityType = {
-  (appId: string): { ({ city: string }): Promise<Location> },
+  ({ appId: string, measureUnits: MeasureUnits }): {
+    ({ city: string }): Promise<Location>,
+  },
 };
 export const getCurrentWeatherByCity: CurrentWeatherByCityType =
-  (appId) =>
+  ({ appId, measureUnits }) =>
   async ({ city }) => {
     const response: LocationSource = await makeRequest({
       queryParams: {
+        units: measureUnits,
         q: city,
-        units: openWeatherUnits,
         appId,
       },
     });
 
-    return normalizeLocation(response);
+    return normalizeLocation(response, measureUnits);
   };
 
 type CurrentWeatherByCoordsType = {
-  (appId: string): { ({ lat: number, lon: number }): Promise<Location> },
+  ({ appId: string, measureUnits: MeasureUnits }): {
+    ({ lat: number, lon: number }): Promise<Location>,
+  },
 };
 export const getCurrentWeatherByCoords: CurrentWeatherByCoordsType =
-  (appId) =>
+  ({ appId, measureUnits }) =>
   async ({ lat, lon }): Promise<Location> => {
     const response: LocationSource = await makeRequest({
       queryParams: {
-        units: openWeatherUnits,
+        units: measureUnits,
         lat,
         lon,
         appId,
       },
     });
 
-    return normalizeLocation(response);
+    return normalizeLocation(response, measureUnits);
   };
 
 const makeRequest = async ({ queryParams }) => {
