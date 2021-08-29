@@ -5,7 +5,7 @@ import { WidgetLocation } from './WidgetLocation';
 import { WidgetMenu } from './WidgetMenu';
 import { WidgetMenuToggler } from './WidgetMenuToggler';
 import { useApi } from '../../common/hooks';
-import { hasLocation } from '../../common/utils';
+import { hasLocation } from '../../common/location';
 import { WidgetContainer } from './WidgetContainer';
 import Alert from 'react-bootstrap/Alert';
 import { localStorageLocationsKey } from '../../common/config';
@@ -13,6 +13,7 @@ import { localStorageLocationsKey } from '../../common/config';
 export const Widget = (): React.Node => {
   const { getCurrentWeatherByCoords, getCurrentWeatherByCity } = useApi();
   const [isMenuOpen, setMenuOpen] = React.useState(false);
+  const [error, setError] = React.useState(null);
   const [locations, setLocations] = useLocalStorage(
     localStorageLocationsKey,
     []
@@ -20,12 +21,17 @@ export const Widget = (): React.Node => {
 
   const loadLocation = React.useCallback(
     async (city) => {
-      const location = await getCurrentWeatherByCity({ city });
-      const newLocations = hasLocation(locations, location.id)
-        ? locations.map((item) => (item.id === location.id ? location : item))
-        : [...locations, location];
+      try {
+        const location = await getCurrentWeatherByCity({ city });
+        const newLocations = hasLocation(locations, location.id)
+          ? locations.map((item) => (item.id === location.id ? location : item))
+          : [...locations, location];
 
-      setLocations(newLocations);
+        setLocations(newLocations);
+        setError(null);
+      } catch (e) {
+        setError({ message: 'Failed to load location' });
+      }
     },
     [getCurrentWeatherByCity, locations, setLocations]
   );
@@ -61,8 +67,14 @@ export const Widget = (): React.Node => {
       setLocations={setLocations}
       getCurrentWeatherByCoords={getCurrentWeatherByCoords}
       getCurrentWeatherByCity={getCurrentWeatherByCity}
+      setError={setError}
     >
       <WidgetMenuToggler isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+      {!!error && (
+        <Alert variant="danger" className="mt-5">
+          {error.message}
+        </Alert>
+      )}
       {!locations.length && (
         <Alert variant="warning" className="mt-5">
           There are no locations. Please select at least one

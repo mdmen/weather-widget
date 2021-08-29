@@ -2,11 +2,11 @@
 import * as React from 'react';
 import type { MeasureUnits } from '../../common/types';
 
-type ParamsContextType = {
+export type SettingsContextType = {
   appId: string,
   measureUnits: MeasureUnits,
 };
 
-export const ParamsContext: React.Context<ParamsContextType> =
+export const SettingsContext: React.Context<SettingsContextType> =
   React.createContext({});
-ParamsContext.displayName = 'ParamsContext';
+SettingsContext.displayName = 'SettingsContext';

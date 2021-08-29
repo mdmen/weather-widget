@@ -18,9 +18,10 @@
     "plugin:react/recommended",
     "plugin:flowtype/recommended",
     "plugin:prettier/recommended",
-    "plugin:jest/recommended"
+    "plugin:jest/recommended",
+    "plugin:testing-library/react"
   ],
-  "plugins": ["react", "react-hooks", "flowtype", "jest"],
+  "plugins": ["react", "react-hooks", "flowtype", "jest", "testing-library"],
   "settings": {
     "react": {
       "version": "detect"
@@ -28,6 +29,10 @@
   },
   "rules": {
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "error",
+    "testing-library/await-async-query": "error",
+    "testing-library/no-await-sync-query": "error",
+    "testing-library/no-debug": "warn",
+    "testing-library/no-dom-import": "off"
   }
 }

@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { ParamsContext } from '../components/context/ParamsContext';
+import { SettingsContext } from '../components/context/SettingsContext';
 import { getCurrentWeatherByCity, getCurrentWeatherByCoords } from './api';
 import type { Location } from './types';
 
@@ -9,7 +9,7 @@ type ApiReturnType = {
 };
 
 export const useApi = (): ApiReturnType => {
-  const { appId, measureUnits } = React.useContext(ParamsContext);
+  const { appId, measureUnits } = React.useContext(SettingsContext);
   return {
     getCurrentWeatherByCity: React.useMemo(
       () => getCurrentWeatherByCity({ appId, measureUnits }),

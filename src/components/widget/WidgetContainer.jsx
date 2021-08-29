@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { useGeolocation } from 'react-use';
-import { collectLocationsToUpdate } from '../../common/utils';
+import { collectLocationsToUpdate } from '../../common/location';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -15,6 +15,7 @@ type Props = {
     lon: number,
   }) => Promise<Location>,
   getCurrentWeatherByCity: ({ city: string }) => Promise<Location>,
+  setError: ({ message: string } | null) => void,
   children: React.Node,
 };
 
@@ -23,6 +24,7 @@ export const WidgetContainer = ({
   getCurrentWeatherByCoords,
   getCurrentWeatherByCity,
   setLocations,
+  setError,
   children,
 }: Props): React.Node => {
   const geoLocation = useGeolocation();
@@ -37,23 +39,33 @@ export const WidgetContainer = ({
 
   React.useEffect(() => {
     if (shouldRequestWeatherByGeo) {
-      (async () => {
-        const location = await getCurrentWeatherByCoords({
-          lat: geoLocation.latitude,
-          lon: geoLocation.longitude,
-        });
+      setIsLoading(true);
 
-        isRequestByGeoComplete.current = true;
-        setLocations([...locations, location]);
+      (async () => {
+        try {
+          const location = await getCurrentWeatherByCoords({
+            lat: geoLocation.latitude,
+            lon: geoLocation.longitude,
+          });
+
+          isRequestByGeoComplete.current = true;
+          setLocations([...locations, location]);
+          setError(null);
+        } catch (e) {
+          setError({ message: 'Failed to load location by geo' });
+        }
+
+        setIsLoading(false);
       })();
     }
   }, [
     geoLocation.latitude,
     geoLocation.longitude,
     getCurrentWeatherByCoords,
-    locations,
-    setLocations,
     shouldRequestWeatherByGeo,
+    setLocations,
+    locations,
+    setError,
   ]);
 
   const loadSeveralLocations = React.useCallback(
@@ -83,23 +95,31 @@ export const WidgetContainer = ({
       setIsLoading(true);
 
       (async () => {
-        const updatedLocations = await loadSeveralLocations(locationsToUpdate);
-        const mergedLocations = locations.map((location) =>
-          updatedLocations[location.id]
-            ? updatedLocations[location.id]
-            : location
-        );
+        try {
+          const updatedLocations = await loadSeveralLocations(
+            locationsToUpdate
+          );
+          const mergedLocations = locations.map((location) =>
+            updatedLocations[location.id]
+              ? updatedLocations[location.id]
+              : location
+          );
 
-        setLocations(mergedLocations);
+          setLocations(mergedLocations);
+          setError(null);
+        } catch (e) {
+          setError({ message: 'Failed to update locations' });
+        }
         setIsLoading(false);
       })();
     }
   }, [
     isLoading,
     loadSeveralLocations,
-    locations,
     locationsToUpdate,
+    locations,
     setLocations,
+    setError,
   ]);
 
   return (

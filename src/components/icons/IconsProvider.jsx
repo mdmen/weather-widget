@@ -11,7 +11,7 @@ import WaterIcon from '../../assets/icons/water.svg';
 import TrashIcon from '../../assets/icons/trash-fill.svg';
 
 export const IconsProvider = (): React.Node => (
-  <div aria-hidden="true" className="d-none">
+  <div className="d-none">
     <EyeIcon id="icon-eye" />
     <GearIcon id="icon-gear" />
     <MoistureIcon id="icon-moisture" />
