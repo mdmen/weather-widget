@@ -23,7 +23,7 @@ export const WidgetMenu = ({
   <Card className="widget-menu">
     <Card.Header as="h5">Settings</Card.Header>
     <Card.Body>
-      <ListGroup variant="flush" className="mb-3">
+      <ListGroup variant="flush" className="mb-3" role="list">
         {locations.map((location, index) => (
           <WidgetMenuLocation
             key={location.id}

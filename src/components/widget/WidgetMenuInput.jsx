@@ -28,10 +28,11 @@ export const WidgetMenuInput = ({
   };
 
   return (
-    <Form onSubmit={submitHandler}>
+    <Form onSubmit={submitHandler} name="location">
       <Form.Group>
-        <Form.Label>Add location</Form.Label>
+        <Form.Label htmlFor="add-location">Add location</Form.Label>
         <Form.Control
+          id="add-location"
           disabled={isDisabled}
           type="text"
           value={value}

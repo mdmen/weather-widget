@@ -3,8 +3,7 @@ import {
   collectLocationsToUpdate,
   normalizeLocation,
 } from '../../src/common/location';
-import { formatTemperature } from '../../src/common/utils';
-import locationResponse from '../mocks/response/location.json';
+import { getLocationResponse } from '../mocks/responses';
 
 describe('Locations helper functions', () => {
   test('Check if location is in a collection', () => {
@@ -23,7 +22,7 @@ describe('Locations helper functions', () => {
   });
 
   test('Return normalized location', () => {
-    const location = normalizeLocation(locationResponse, 'metric');
+    const location = normalizeLocation(getLocationResponse(), 'metric');
     expect(location).toMatchObject({
       id: 'test',
       city: 'Moscow',
@@ -38,13 +37,5 @@ describe('Locations helper functions', () => {
     });
     expect(location.image).toMatch(/.+\.png/);
     expect(location.lastUpdate).toBeGreaterThan(Date.now() - 1000);
-  });
-});
-
-describe('Utils functions', () => {
-  test('Return formatted temperature', () => {
-    expect(formatTemperature(10, 'standard')).toEqual('10K');
-    expect(formatTemperature(10, 'metric')).toEqual('10°C');
-    expect(formatTemperature(10, 'imperial')).toEqual('10°F');
   });
 });

@@ -72,6 +72,7 @@ export const WidgetMenuLocation = ({
       style={{ opacity: isDragging ? 0 : 1 }}
       className="d-flex align-items-center justify-content-between"
       data-handler-id={handlerId}
+      role="listitem"
     >
       <Button
         ref={targetDragRef}

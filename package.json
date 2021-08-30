@@ -22,7 +22,10 @@
     "not ie 11"
   ],
   "jest": {
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.js"
+    ]
   },
   "dependencies": {
     "bootstrap": "5.1.0",
@@ -62,6 +65,8 @@
     "husky": "^7.0.1",
     "jest": "^27.0.6",
     "lint-staged": "^11.1.2",
+    "msw": "^0.35.0",
+    "node-fetch": "^2.6.1",
     "prettier": "^2.3.2",
     "sass": "^1.38.0",
     "sass-loader": "^12.1.0",
