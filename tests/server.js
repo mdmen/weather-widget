@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { openWeatherApiUrl } from '../src/common/config';
-import { getLocationResponse } from './mocks/responses';
+import { getLocationResponse } from './mocks/response';
 
 const handlers = [
   rest.get(openWeatherApiUrl, (req, res, ctx) => {
@@ -12,7 +12,7 @@ const handlers = [
     }
 
     const name = req.url.searchParams.get('q');
-    if (name && name !== 'not found') {
+    if (name) {
       const response = getLocationResponse({
         id: `id_${name}`,
         name,
@@ -29,5 +29,4 @@ const handlers = [
   }),
 ];
 
-const server = setupServer(...handlers);
-export { server };
+export const server = setupServer(...handlers);

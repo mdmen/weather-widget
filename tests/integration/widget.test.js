@@ -8,17 +8,20 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { mockGeolocation } from '../mocks/geolocation';
 
 describe('Widget', () => {
+  beforeEach(() => {
+    mockGeolocation().withErrorResponse();
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  test('After first mount should show alert with no locations message', async () => {
-    mockGeolocation().withErrorResponse();
+  test('After first render should show alert with no locations message', async () => {
     render(<Widget />);
 
     const alert = await screen.findByRole(/alert/i);
     expect(alert).toHaveTextContent(
-      /There are no locations. Please select at least one/i
+      /There are no locations\. Please select at least one/i
     );
   });
 
@@ -37,8 +40,7 @@ describe('Widget', () => {
     expect(screen.queryByText('Settings')).not.toBeInTheDocument();
   });
 
-  test('Should add/remove location', async () => {
-    mockGeolocation().withErrorResponse();
+  test('Should add/move/delete locations', async () => {
     render(
       <DndProvider backend={HTML5Backend}>
         <Widget />
@@ -55,17 +57,34 @@ describe('Widget', () => {
     fireEvent.change(input, { target: { value: 'Moscow' } });
     fireEvent.submit(form);
 
-    const location = await screen.findByRole('listitem');
+    let location = await screen.findByRole('listitem');
     expect(location).toHaveTextContent(/Moscow/i);
 
-    fireEvent.change(input, { target: { value: 'Dublin' } });
+    fireEvent.change(input, { target: { value: 'London' } });
     fireEvent.submit(form);
 
-    await screen.findByText(/Dublin/i);
-    const locations = screen.getAllByRole('listitem');
-    expect(locations[0]).toHaveTextContent(/Moscow/i);
-    expect(locations[1]).toHaveTextContent(/Dublin/i);
+    await screen.findByText(/London/i);
+    let [firstLocation, secondLocation] = screen.getAllByRole('listitem');
+    expect(firstLocation).toHaveTextContent(/Moscow/i);
+    expect(secondLocation).toHaveTextContent(/London/i);
 
-    // TODO remove locations
+    // move locations
+
+    const [firstDragBtn] = screen.getAllByLabelText(/Drag location/i);
+    fireEvent.dragStart(firstDragBtn);
+    fireEvent.drop(secondLocation);
+
+    [firstLocation, secondLocation] = screen.getAllByRole('listitem');
+    expect(firstLocation).toHaveTextContent(/London/i);
+    expect(secondLocation).toHaveTextContent(/Moscow/i);
+
+    // delete locations
+
+    const deleteButtons = screen.getAllByLabelText(/Delete location/i);
+    deleteButtons.forEach((button) => {
+      userEvent.click(button);
+    });
+    location = screen.queryByRole('listitem');
+    expect(location).not.toBeInTheDocument();
   });
 });

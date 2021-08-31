@@ -77,10 +77,10 @@ export const WidgetMenuLocation = ({
       <Button
         ref={targetDragRef}
         className="widget-menu__btn widget-menu__btn--drag"
+        aria-label="Drag location"
         variant="light"
         tabIndex="-1"
         size="sm"
-        as="div"
       >
         <Icon name="dots" />
       </Button>

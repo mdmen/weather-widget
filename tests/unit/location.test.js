@@ -3,7 +3,7 @@ import {
   collectLocationsToUpdate,
   normalizeLocation,
 } from '../../src/common/location';
-import { getLocationResponse } from '../mocks/responses';
+import { getLocationResponse } from '../mocks/response';
 
 describe('Locations helper functions', () => {
   test('Check if location is in a collection', () => {
@@ -24,7 +24,7 @@ describe('Locations helper functions', () => {
   test('Return normalized location', () => {
     const location = normalizeLocation(getLocationResponse(), 'metric');
     expect(location).toMatchObject({
-      id: 'test',
+      id: 'id0',
       city: 'Moscow',
       country: 'RU',
       temp: '25°C',
