@@ -70,13 +70,9 @@ export const Widget = (): React.Node => {
       setError={setError}
     >
       <WidgetMenuToggler isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
-      {!!error && (
-        <Alert variant="danger" className="mt-5">
-          {error.message}
-        </Alert>
-      )}
+      {!!error && <Alert variant="danger">{error.message}</Alert>}
       {!locations.length && (
-        <Alert variant="warning" className="mt-5">
+        <Alert variant="warning">
           There are no locations. Please select at least one
         </Alert>
       )}

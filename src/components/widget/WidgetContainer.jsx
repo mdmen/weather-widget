@@ -123,7 +123,7 @@ export const WidgetContainer = ({
   ]);
 
   return (
-    <Container fluid>
+    <Container className="widget" fluid>
       <Row>
         <Col>{children}</Col>
       </Row>
