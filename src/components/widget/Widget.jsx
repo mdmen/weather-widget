@@ -4,11 +4,11 @@ import { useLocalStorage } from 'react-use';
 import { WidgetLocation } from './WidgetLocation';
 import { WidgetMenu } from './WidgetMenu';
 import { WidgetMenuToggler } from './WidgetMenuToggler';
-import { useApi } from '../../common/hooks';
-import { hasLocation } from '../../common/location';
+import { useApi } from 'common/hooks';
+import { hasLocation } from 'common/location';
+import { localStorageLocationsKey } from 'common/config';
 import { WidgetContainer } from './WidgetContainer';
 import Alert from 'react-bootstrap/Alert';
-import { localStorageLocationsKey } from '../../common/config';
 
 export const Widget = (): React.Node => {
   const { getCurrentWeatherByCoords, getCurrentWeatherByCity } = useApi();

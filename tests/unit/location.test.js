@@ -2,7 +2,7 @@ import {
   hasLocation,
   collectLocationsToUpdate,
   normalizeLocation,
-} from '../../src/common/location';
+} from 'common/location';
 import { getLocationResponse } from '../mocks/response';
 
 describe('Locations helper functions', () => {

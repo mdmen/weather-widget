@@ -1,25 +1,27 @@
 // Configuration
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
-@import "~bootstrap/scss/utilities";
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/utilities';
+
+// Redefine bootstrap
+@import 'styles/bootstrap/root';
+@import 'styles/bootstrap/reboot';
 
 // Layout & components
-@import "~bootstrap/scss/type";
-@import "~bootstrap/scss/card";
-@import "~bootstrap/scss/containers";
-@import "~bootstrap/scss/list-group";
-@import "~bootstrap/scss/buttons";
-@import "~bootstrap/scss/alert";
-@import "~bootstrap/scss/grid";
-@import "~bootstrap/scss/forms/labels";
-@import "~bootstrap/scss/forms/form-control";
+@import '~bootstrap/scss/type';
+@import '~bootstrap/scss/card';
+@import '~bootstrap/scss/containers';
+@import '~bootstrap/scss/list-group';
+@import '~bootstrap/scss/buttons';
+@import '~bootstrap/scss/alert';
+@import '~bootstrap/scss/grid';
+@import '~bootstrap/scss/forms/labels';
+@import '~bootstrap/scss/forms/form-control';
 
 // Utilities
-@import "~bootstrap/scss/utilities/api";
+@import '~bootstrap/scss/utilities/api';
 
-// Custom
-@import "assets/styles/bootstrap/root";
-@import "assets/styles/bootstrap/reboot";
-@import "assets/styles/base";
-@import "assets/styles/widget";
+// Custom components
+@import 'styles/base';
+@import 'styles/widget';

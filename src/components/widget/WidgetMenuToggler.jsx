@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Icon } from '../icons/Icon';
+import { Icon } from 'components/icons/Icon';
 import Button from 'react-bootstrap/Button';
 
 type Props = {

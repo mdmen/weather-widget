@@ -1,4 +1,4 @@
-import { formatTemperature } from '../../src/common/utils';
+import { formatTemperature } from 'common/utils';
 
 describe('Utils functions', () => {
   test('Return formatted temperature', () => {

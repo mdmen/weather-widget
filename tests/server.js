@@ -1,6 +1,6 @@
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { openWeatherApiUrl } from '../src/common/config';
+import { openWeatherApiUrl } from 'common/config';
 import { getLocationResponse } from './mocks/response';
 
 const handlers = [

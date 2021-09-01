@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import type { Icons } from '../../common/types';
+import type { Icons } from 'common/types';
 
 type Props = {
   name: Icons,

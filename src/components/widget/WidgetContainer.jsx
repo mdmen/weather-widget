@@ -1,11 +1,11 @@
 // @flow
 import * as React from 'react';
 import { useGeolocation } from 'react-use';
-import { collectLocationsToUpdate } from '../../common/location';
+import { collectLocationsToUpdate } from 'common/location';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import type { Location } from '../../common/types';
+import type { Location } from 'common/types';
 
 type Props = {
   locations: Array<Location>,

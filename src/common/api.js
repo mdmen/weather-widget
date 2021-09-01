@@ -2,7 +2,7 @@
 import { openWeatherApiUrl } from './config';
 import { normalizeLocation } from './location';
 import type { Location, LocationSource, MeasureUnits } from './types';
-import type { SettingsContextType } from '../components/context/SettingsContext';
+import type { SettingsContextType } from 'components/context/SettingsContext';
 
 type CurrentWeatherByCity = {
   (settings: SettingsContextType): {

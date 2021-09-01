@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { SettingsContext } from '../components/context/SettingsContext';
+import { SettingsContext } from 'components/context/SettingsContext';
 import { getCurrentWeatherByCity, getCurrentWeatherByCoords } from './api';
 import type { Location } from './types';
 

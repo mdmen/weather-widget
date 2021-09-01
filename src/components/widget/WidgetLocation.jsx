@@ -4,9 +4,9 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
-import { upperFirst } from '../../common/utils';
-import { Icon } from '../icons/Icon';
-import type { Location } from '../../common/types';
+import { upperFirst } from 'common/utils';
+import { Icon } from 'components/icons/Icon';
+import type { Location } from 'common/types';
 
 type Props = {
   location: Location,

@@ -4,8 +4,8 @@ import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { WidgetMenuInput } from './WidgetMenuInput';
 import { WidgetMenuLocation } from './WidgetMenuLocation';
-import { maxLocationsCount } from '../../common/config';
-import type { Location } from '../../common/types';
+import { maxLocationsCount } from 'common/config';
+import type { Location } from 'common/types';
 
 type Props = {
   locations: Array<Location>,
@@ -31,6 +31,7 @@ export const WidgetMenu = ({
             location={location}
             removeLocation={removeLocation}
             swapLocations={swapLocations}
+            isDraggable={!!locations.length}
           />
         ))}
       </ListGroup>

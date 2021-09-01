@@ -4,10 +4,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 require('dotenv').config();
 
+const sourceFolder = path.resolve(__dirname, 'src');
 const distFolder = path.resolve(__dirname, 'dist');
 
 module.exports = {
-  entry: ['react-hot-loader/patch', './src/index.js'],
+  entry: ['react-hot-loader/patch', `${sourceFolder}/index.js`],
   output: {
     path: distFolder,
     filename: 'widget.min.js',
@@ -53,6 +54,7 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx'],
+    modules: ['node_modules', sourceFolder],
     alias: {
       'react-dom': '@hot-loader/react-dom',
     },

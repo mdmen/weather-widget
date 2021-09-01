@@ -3,12 +3,13 @@ import * as React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import { useDrag, useDrop } from 'react-dnd';
-import { Icon } from '../icons/Icon';
-import type { Location } from '../../common/types';
+import { Icon } from 'components/icons/Icon';
+import type { Location } from 'common/types';
 
 type Props = {
   index: number,
   location: Location,
+  isDraggable: boolean,
   removeLocation: (id: number) => void,
   swapLocations: (dragIndex: number, hoverIndex: number) => void,
 };
@@ -16,6 +17,7 @@ type Props = {
 export const WidgetMenuLocation = ({
   index,
   location,
+  isDraggable,
   swapLocations,
   removeLocation,
 }: Props): React.Node => {
@@ -78,6 +80,7 @@ export const WidgetMenuLocation = ({
         ref={targetDragRef}
         className="widget-menu__btn widget-menu__btn--drag"
         aria-label="Drag location"
+        disabled={!isDraggable}
         variant="light"
         tabIndex="-1"
         size="sm"
