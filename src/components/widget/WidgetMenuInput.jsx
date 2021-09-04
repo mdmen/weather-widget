@@ -13,18 +13,15 @@ export const WidgetMenuInput = ({
 }: Props): React.Node => {
   const [value, setValue] = React.useState('');
 
-  const submitHandler = React.useCallback(
-    (event) => {
-      event.preventDefault();
+  const submitHandler = (e) => {
+    e.preventDefault();
 
-      loadLocation(value);
-      setValue('');
-    },
-    [loadLocation, value]
-  );
+    loadLocation(value);
+    setValue('');
+  };
 
-  const onChange = (event) => {
-    setValue(event.target.value);
+  const onChange = (e) => {
+    setValue(e.target.value);
   };
 
   return (

@@ -24,6 +24,8 @@ jobs:
         run: yarn run test
 
       - name: Build
+        env:
+          PUBLIC_OPENWEATHER_API_KEY: ${{ secrets.PUBLIC_OPENWEATHER_API_KEY }}
         run: yarn run build
 
       - name: Deploy

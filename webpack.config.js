@@ -70,7 +70,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       hash: true,
       templateParameters: {
-        openWeatherApiKey: process.env.OPENWEATHER_API_KEY,
+        openWeatherApiKey: process.env.PUBLIC_OPENWEATHER_API_KEY,
       },
     }),
   ],

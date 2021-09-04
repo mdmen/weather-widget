@@ -4,6 +4,7 @@ Built using:
 - React
 - Flow
 - Bootstrap
+- OpenWeather
 - Jest
 - React Testing Library
 
